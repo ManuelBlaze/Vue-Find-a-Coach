@@ -1,5 +1,5 @@
 <template>
-  <section>FILTER</section>
+  <coach-filter @changeFilter="setFilters" />
   <section>
     <base-card>
       <div class="controls">
@@ -7,7 +7,7 @@
         <base-button link to="/register">Register as a Coach</base-button>
       </div>
       <ul v-if="hasCoaches">
-        <li v-for="coach in coaches" :key="coach.id">
+        <li v-for="coach in filteredCoaches" :key="coach.id">
           <coach-item
             :id="coach.id"
             :firstName="coach.firstName"
@@ -23,14 +23,49 @@
 </template>
 
 <script>
+import _ from 'lodash';
+
 import { mapGetters } from 'vuex';
+
+import CoachFilter from '../../components/coaches/CoachFilter.vue';
 import CoachItem from '../../components/coaches/CoachItem.vue';
 
 export default {
-  components: { CoachItem },
-
+  components: { CoachItem, CoachFilter },
+  data() {
+    return {
+      activeFilters: {
+        frontend: true,
+        backend: true,
+        career: true,
+      },
+    };
+  },
   computed: {
     ...mapGetters('coaches', ['coaches', 'hasCoaches']),
+    parsedFilters() {
+      return _.reduce(
+        this.activeFilters,
+        function (memo, val, key) {
+          if (val) memo.push(key);
+          return memo;
+        },
+        []
+      );
+    },
+    filteredCoaches() {
+      const filters = this.parsedFilters;
+
+      return _.filter(this.coaches, function (coach) {
+        const checkedValues = _.intersection(Array.from(coach.areas), filters);
+        return !_.isEmpty(checkedValues);
+      });
+    },
+  },
+  methods: {
+    setFilters(updatedFilters) {
+      this.activeFilters = updatedFilters;
+    },
   },
 };
 </script>
