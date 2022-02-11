@@ -21,7 +21,7 @@
     </div>
 
     <div class="form-control">
-      <label for="description">First Name</label>
+      <label for="description">Description</label>
       <textarea rows="5" id="description" v-model.trim="description" />
     </div>
 
@@ -70,6 +70,7 @@
 
 <script>
 export default {
+  emits: ['saveData'],
   data() {
     return {
       firstName: '',
@@ -81,6 +82,7 @@ export default {
   },
   methods: {
     submitForm() {
+      // build the form data
       const formData = {
         firstName: this.firstName,
         lastName: this.lastName,
@@ -89,7 +91,8 @@ export default {
         areas: this.areas,
       };
 
-      console.log(formData);
+      // globally save the data
+      this.$emit('saveData', formData);
     },
   },
 };
