@@ -63,7 +63,7 @@
           name="frontend"
           id="frontend"
           value="frontend"
-          @blur="clearValidity('area')"
+          @blur="clearValidity('areas')"
           v-model="areas.val"
         />
         <label for="frontend">Frontend Development</label>
@@ -74,7 +74,7 @@
           name="backend"
           id="backend"
           value="backend"
-          @blur="clearValidity('area')"
+          @blur="clearValidity('areas')"
           v-model="areas.val"
         />
         <label for="backend">Backend Development</label>
@@ -85,7 +85,7 @@
           name="career"
           id="career"
           value="career"
-          @blur="clearValidity('area')"
+          @blur="clearValidity('areas')"
           v-model="areas.val"
         />
         <label for="career">Career Advisory</label>
