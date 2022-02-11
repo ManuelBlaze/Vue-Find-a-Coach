@@ -6,6 +6,7 @@
         type="text"
         name="firstname"
         id="firstname"
+        @blur="clearValidity('firstName')"
         v-model.trim="firstName.val"
       />
       <p class="label-error" v-if="!firstName.isValid">
@@ -19,6 +20,7 @@
         type="text"
         name="lastname"
         id="lastname"
+        @blur="clearValidity('lastName')"
         v-model.trim="lastName.val"
       />
       <p class="label-error" v-if="!lastName.isValid">
@@ -28,7 +30,12 @@
 
     <div class="form-control" :class="{ invalid: !description.isValid }">
       <label for="description">Description</label>
-      <textarea rows="5" id="description" v-model.trim="description.val" />
+      <textarea
+        rows="5"
+        id="description"
+        v-model.trim="description.val"
+        @blur="clearValidity('description')"
+      />
       <p class="label-error" v-if="!description.isValid">
         Description must not be empty!
       </p>
@@ -40,6 +47,7 @@
         type="number"
         name="rate"
         id="rate"
+        @blur="clearValidity('rate')"
         v-model.number.trim="rate.val"
       />
       <p class="label-error" v-if="!rate.isValid">
@@ -55,6 +63,7 @@
           name="frontend"
           id="frontend"
           value="frontend"
+          @blur="clearValidity('area')"
           v-model="areas.val"
         />
         <label for="frontend">Frontend Development</label>
@@ -65,6 +74,7 @@
           name="backend"
           id="backend"
           value="backend"
+          @blur="clearValidity('area')"
           v-model="areas.val"
         />
         <label for="backend">Backend Development</label>
@@ -75,6 +85,7 @@
           name="career"
           id="career"
           value="career"
+          @blur="clearValidity('area')"
           v-model="areas.val"
         />
         <label for="career">Career Advisory</label>
@@ -133,6 +144,9 @@ export default {
     };
   },
   methods: {
+    clearValidity(input) {
+      this[input].isValid = true;
+    },
     validateForm() {
       this.formIsValid = true;
 
