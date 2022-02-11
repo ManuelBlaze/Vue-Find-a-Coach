@@ -1,10 +1,12 @@
 import _ from 'lodash';
 
 export default {
-  requests(state) {
-    return state.requests;
+  requests(state, _getters, _rootState, rootGetters) {
+    const coachId = rootGetters.userId;
+
+    return _.filter(state.requests, { coachId });
   },
-  hasRequests(state) {
-    return !_.isEmpty(state.requests);
+  hasRequests(_state, getters) {
+    return !_.isEmpty(getters.requests);
   },
 };
