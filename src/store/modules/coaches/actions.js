@@ -4,13 +4,6 @@ import axios from 'axios';
 
 const { VUE_APP_DB } = process.env;
 
-/**
- * @constant
- * @type {Number}
- * @default
- */
-const OK_STATUS = 200;
-
 export default {
   async registerCoach(context, data) {
     // get userID
@@ -29,11 +22,7 @@ export default {
     const url = `${VUE_APP_DB}/coaches/${userId}.json`;
 
     // save the data in DB
-    const { status } = await axios.put(url, coachData);
-
-    if (status !== OK_STATUS) {
-      // error...
-    }
+    await axios.put(url, coachData);
 
     // save the data in component
     context.commit('registerCoach', {
@@ -62,8 +51,7 @@ export default {
         context.commit('updateData', parsedData);
       })
       .catch((e) => {
-        console.log(e);
-        this.error = 'Failed to fetch data... please try again later.';
+        throw new Error(e.message || 'Failed to Fetch!');
       });
   },
 };

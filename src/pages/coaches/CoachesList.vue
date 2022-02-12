@@ -1,5 +1,8 @@
 <template>
   <coach-filter @changeFilter="setFilters" />
+  <base-dialog title="An error ocurred!" :show="!!error" @close="handleError">
+    <p>{{ error }}</p>
+  </base-dialog>
   <section>
     <base-card>
       <div class="controls">
@@ -42,6 +45,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      error: null,
       activeFilters: {
         frontend: true,
         backend: true,
@@ -76,8 +80,16 @@ export default {
     },
     async getCoaches() {
       this.isLoading = true;
-      await this.$store.dispatch('coaches/fetchData');
-      this.isLoading = false;
+      try {
+        await this.$store.dispatch('coaches/fetchData');
+        this.isLoading = false;
+      } catch ({ message }) {
+        this.isLoading = false;
+        this.error = message;
+      }
+    },
+    handleError() {
+      this.error = null;
     },
   },
   mounted() {
