@@ -6,6 +6,9 @@ export default {
 
     return _.filter(state.requests, { coachId });
   },
+  allRequests(state) {
+    return state.requests;
+  },
   hasRequests(_state, getters) {
     return !_.isEmpty(getters.requests);
   },
