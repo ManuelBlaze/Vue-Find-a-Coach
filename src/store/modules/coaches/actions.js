@@ -30,7 +30,11 @@ export default {
       id: userId,
     });
   },
-  async fetchData(context) {
+  async fetchData(context, { forceFetch }) {
+    if (!context.getters.shouldUpdate && !forceFetch) {
+      return;
+    }
+
     // build URL
     const url = `${VUE_APP_DB}/coaches.json`;
 
@@ -49,6 +53,7 @@ export default {
         }));
 
         context.commit('updateData', parsedData);
+        context.commit('setFetchTimeStamp');
       })
       .catch((e) => {
         throw new Error(e.message || 'Failed to Fetch!');
