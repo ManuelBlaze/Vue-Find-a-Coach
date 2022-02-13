@@ -1,4 +1,14 @@
 <template>
+  <base-dialog :show="isLoading || error" :title="title" @close="closeModal">
+    <div v-if="isLoading">
+      <base-spinner />
+    </div>
+
+    <p v-else>
+      {{ error }}
+    </p>
+  </base-dialog>
+
   <form @submit.prevent="submitForm">
     <div class="form-control">
       <label for="email">Your E-Mail</label>
@@ -42,6 +52,9 @@ export default {
       email: '',
       message: '',
       formIsValid: true,
+      isLoading: false,
+      error: null,
+      title: '',
     };
   },
   methods: {
@@ -50,18 +63,30 @@ export default {
       this.formIsValid = true;
     },
     validate() {
+      this.error = false;
+
       const { email, message } = this;
       if (_.isEmpty(email) || _.isEmpty(message)) {
         this.formIsValid = false;
       }
     },
-    submitForm() {
+    closeModal() {
+      this.isLoading = false;
+      this.error = null;
+    },
+    async submitForm() {
       // validate form
       this.validate();
 
       if (!this.formIsValid) {
         return;
       }
+
+      // change modal title
+      this.title = 'Sending message to Coach!';
+
+      // start loading
+      this.isLoading = true;
 
       // build form data
       const formData = {
@@ -70,8 +95,16 @@ export default {
         message: this.message,
       };
 
-      this.contactCoach(formData);
-      this.$router.replace('/coaches');
+      // send the data
+      try {
+        await this.contactCoach(formData);
+        this.$router.replace('/coaches');
+      } catch (error) {
+        console.log(error);
+        this.title = 'An error ocurred';
+        this.isLoading = false;
+        this.error = error.message || 'An error has ocurred!, please try later';
+      }
     },
   },
 };
