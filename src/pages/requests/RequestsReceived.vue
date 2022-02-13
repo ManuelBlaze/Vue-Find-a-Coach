@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import RequestItem from './RequestItem.vue';
 
@@ -26,6 +26,15 @@ export default {
   components: { RequestItem },
   computed: {
     ...mapGetters('requests', ['requests', 'hasRequests']),
+  },
+  methods: {
+    ...mapActions('requests', ['fetchRequests']),
+    async getRequests() {
+      await this.fetchRequests();
+    },
+  },
+  mounted() {
+    this.getRequests();
   },
 };
 </script>
