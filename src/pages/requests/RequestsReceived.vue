@@ -4,7 +4,8 @@
       <header>
         <h2>Requests Recieved</h2>
       </header>
-      <div v-if="hasRequests">
+      <base-spinner v-if="isLoading" />
+      <div v-else-if="hasRequests">
         <ul v-for="request in requests" :key="request.id">
           <request-item
             :message="request.message"
@@ -24,13 +25,20 @@ import RequestItem from './RequestItem.vue';
 
 export default {
   components: { RequestItem },
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   computed: {
     ...mapGetters('requests', ['requests', 'hasRequests']),
   },
   methods: {
     ...mapActions('requests', ['fetchRequests']),
     async getRequests() {
+      this.isLoading = true;
       await this.fetchRequests();
+      this.isLoading = false;
     },
   },
   mounted() {

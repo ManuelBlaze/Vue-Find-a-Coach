@@ -79,7 +79,5 @@ export default {
       .catch((e) => {
         throw new Error(e.message || 'Failed to get requests.');
       });
-
-    console.log(context);
   },
 };
