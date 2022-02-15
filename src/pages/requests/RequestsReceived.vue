@@ -1,5 +1,12 @@
 <template>
   <section>
+    <base-dialog
+      title="An error has ocurred!"
+      :show="!!error"
+      @close="closeDialog"
+    >
+      {{ error }}
+    </base-dialog>
     <base-card>
       <header>
         <h2>Requests Recieved</h2>
@@ -28,6 +35,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      error: null,
     };
   },
   computed: {
@@ -37,8 +45,17 @@ export default {
     ...mapActions('requests', ['fetchRequests']),
     async getRequests() {
       this.isLoading = true;
-      await this.fetchRequests();
-      this.isLoading = false;
+
+      try {
+        this.isLoading = false;
+        await this.fetchRequests();
+      } catch (error) {
+        this.isLoading = false;
+        this.error = error.message || 'Failed to fetch requests';
+      }
+    },
+    closeDialog() {
+      this.error = null;
     },
   },
   mounted() {
