@@ -34,4 +34,7 @@ export default {
         throw new Error(e.message || 'Failed to Auth!');
       });
   },
+  logout(context) {
+    context.commit('logoutUser');
+  },
 };

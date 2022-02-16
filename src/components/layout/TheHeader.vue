@@ -1,4 +1,17 @@
 <template>
+  <base-dialog
+    :show="showActions"
+    @close="toggleModal"
+    title="User Actions"
+    fixed
+  >
+    <div class="controlls">
+      <base-button @click="logOut">
+        <em class="fas fa-sign-in-alt" /> LogOut
+      </base-button>
+      <base-button @click="toggleModal" mode="outline">Cancel</base-button>
+    </div>
+  </base-dialog>
   <header>
     <nav>
       <h1>
@@ -11,7 +24,7 @@
         <li v-if="isAuthenticated">
           <router-link to="/requests">Requests</router-link>
         </li>
-        <li class="user" v-if="isAuthenticated">
+        <li class="user" v-if="isAuthenticated" @click="toggleModal">
           <em class="fas fa-user" /> {{ parsedUser }}
         </li>
         <li v-else>
@@ -27,9 +40,14 @@
 <script>
 import _ from 'lodash';
 
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
+  data() {
+    return {
+      showActions: false,
+    };
+  },
   computed: {
     ...mapGetters(['email', 'isAuthenticated']),
     parsedUser() {
@@ -41,6 +59,17 @@ export default {
       }
 
       return '';
+    },
+  },
+  methods: {
+    ...mapActions(['logout']),
+    toggleModal() {
+      this.showActions = !this.showActions;
+    },
+    logOut() {
+      this.logout();
+      this.toggleModal();
+      this.$router.replace('/coaches');
     },
   },
 };
@@ -116,5 +145,11 @@ li {
 em {
   font-size: 18px;
   margin: 0 3px 0 0;
+}
+
+.controlls {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
 }
 </style>
