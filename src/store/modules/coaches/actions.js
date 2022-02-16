@@ -18,8 +18,11 @@ export default {
       hourlyRate: data.rate,
     };
 
+    // get user token
+    const token = context.rootGetters.token;
+
     // build DB URL
-    const url = `${VUE_APP_DB}/coaches/${userId}.json`;
+    const url = `${VUE_APP_DB}/coaches/${userId}.json?auth=${token}`;
 
     // save the data in DB
     await axios.put(url, coachData);

@@ -8,13 +8,45 @@
         <li>
           <router-link to="/coaches">All Coaches</router-link>
         </li>
-        <li>
-          <router-link to="/requests">Requests</router-link>
+        <div v-if="!!email">
+          <li>
+            <router-link to="/requests">Requests</router-link>
+          </li>
+          <li class="user">
+            {{ parsedUser }}
+          </li>
+        </div>
+        <li v-else>
+          <router-link to="/auth">
+            <em class="fas fa-sign-in-alt" /> LogIn | SignUp
+          </router-link>
         </li>
       </ul>
     </nav>
   </header>
 </template>
+
+<script>
+import _ from 'lodash';
+
+import { mapGetters } from 'vuex';
+
+export default {
+  computed: {
+    ...mapGetters(['email']),
+    parsedUser() {
+      const { email } = this;
+
+      if (!_.isEmpty(email)) {
+        const user = email.split('@')[0];
+        return _.capitalize(user);
+      }
+
+      return '';
+    },
+  },
+};
+</script>
 
 <style scoped>
 header {
@@ -38,6 +70,7 @@ a:active,
 a:hover,
 a.router-link-active {
   border: 1px solid #f391e3;
+  border-radius: 10px;
 }
 
 h1 {
@@ -74,5 +107,15 @@ header ul {
 
 li {
   margin: 0 0.5rem;
+}
+
+.user {
+  color: white;
+  font-weight: bold;
+}
+
+em {
+  font-size: 18px;
+  margin: 0 3px 0 0;
 }
 </style>

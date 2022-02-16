@@ -8,9 +8,9 @@
       <base-card>
         <div class="controls">
           <base-button mode="outline" @click="getCoaches(true)">
-            Refresh
+            <em class="fas fa-redo" />
           </base-button>
-          <base-button link to="/register" v-if="!isCoach && !isLoading">
+          <base-button link to="/register" v-if="registerAsCoachAcces">
             Register as a Coach
           </base-button>
         </div>
@@ -59,6 +59,10 @@ export default {
   },
   computed: {
     ...mapGetters('coaches', ['coaches', 'hasCoaches', 'isCoach']),
+    ...mapGetters(['email']),
+    registerAsCoachAcces() {
+      return !this.isCoach && !this.isLoading && this.email;
+    },
     parsedFilters() {
       return _.reduce(
         this.activeFilters,

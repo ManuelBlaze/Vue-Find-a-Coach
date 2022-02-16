@@ -54,8 +54,11 @@ export default {
     });
   },
   async fetchRequests(context) {
+    // get user token
+    const token = context.rootGetters.token;
+
     // build URL
-    const url = `${VUE_APP_DB}/requests.json`;
+    const url = `${VUE_APP_DB}/requests.json?auth=${token}`;
 
     // get requests from DB
     await axios

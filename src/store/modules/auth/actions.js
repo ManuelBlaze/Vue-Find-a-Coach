@@ -19,8 +19,11 @@ export default {
         password,
         returnSecureToken: true,
       })
-      .then(({ idToken, expiresIn, localId }) => {
+      .then(({ data }) => {
+        const { idToken, expiresIn, localId } = data;
+
         context.commit('setUser', {
+          email,
           token: idToken,
           userId: localId,
           tokenExpiration: expiresIn,

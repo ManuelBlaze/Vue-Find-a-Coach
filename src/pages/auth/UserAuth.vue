@@ -153,6 +153,7 @@ input {
   font: inherit;
   border: 1px solid #ccc;
   padding: 0.15rem;
+  border-radius: 7px;
 }
 
 input:focus {
@@ -163,6 +164,8 @@ input:focus {
 
 .controlls {
   margin-top: 1.5em;
+  display: flex;
+  justify-content: space-between;
 }
 
 p {
