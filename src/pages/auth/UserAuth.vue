@@ -79,10 +79,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['signup', 'login']),
+    ...mapActions(['auth']),
     async submitForm() {
       // extract values
-      const { email, password } = this;
+      const { email, password, mode } = this;
 
       // clean errors
       this.formIsValid = true;
@@ -92,27 +92,31 @@ export default {
         this.formIsValid = false;
         return;
       }
+
+      //build action payload
+      const payload = {
+        email,
+        password,
+        type: mode,
+      };
+
       // show charging progress
       this.isLoading = true;
 
       try {
         // send the request
-        if (this.mode === 'login') {
-          console.log('ª');
-        } else {
-          await this.signup({
-            email,
-            password,
-          });
-        }
+        await this.auth(payload);
 
+        // stop loading and redirect
         this.isLoading = false;
         this.$router.replace('/coaches');
       } catch (error) {
         this.isLoading = false;
         console.log(error);
+
+        // show message error in front
         this.error = `Failed to ${_.capitalize(
-          this.mode
+          mode
         )}, please check your data. (${error.message})`;
       }
     },
