@@ -1,6 +1,6 @@
 <template>
   <base-card>
-    <form @submit="submitForm">
+    <form @submit.prevent="submitForm">
       <div class="form-control">
         <label for="email">E-Mail</label>
         <input type="email" name="email" id="email" v-model.trim="email" />
@@ -32,6 +32,8 @@
 <script>
 import _ from 'lodash';
 
+import { mapActions } from 'vuex';
+
 /**
  * @constant
  * @type {Map<String, String>}
@@ -61,6 +63,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['signup']),
     submitForm() {
       // extract values
       const { email, password } = this;
@@ -75,6 +78,14 @@ export default {
       }
 
       // send the request
+      if (this.mode === 'login') {
+        return;
+      }
+
+      this.signup({
+        email,
+        password,
+      });
     },
     switchAuthMode() {
       // change form mode
