@@ -1,5 +1,5 @@
 <template>
-  <base-dialog :show="isLoading || error" :title="title" @close="closeModal">
+  <base-dialog :show="isLoading || !!error" :title="title" @close="closeModal">
     <div v-if="isLoading">
       <base-spinner />
     </div>

@@ -59,9 +59,9 @@ export default {
   },
   computed: {
     ...mapGetters('coaches', ['coaches', 'hasCoaches', 'isCoach']),
-    ...mapGetters(['email']),
+    ...mapGetters(['isAuthenticated']),
     registerAsCoachAcces() {
-      return !this.isCoach && !this.isLoading && this.email;
+      return !this.isCoach && !this.isLoading && this.isAuthenticated;
     },
     parsedFilters() {
       return _.reduce(

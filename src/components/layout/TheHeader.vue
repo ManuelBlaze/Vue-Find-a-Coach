@@ -8,14 +8,12 @@
         <li>
           <router-link to="/coaches">All Coaches</router-link>
         </li>
-        <div v-if="!!email">
-          <li>
-            <router-link to="/requests">Requests</router-link>
-          </li>
-          <li class="user">
-            {{ parsedUser }}
-          </li>
-        </div>
+        <li v-if="isAuthenticated">
+          <router-link to="/requests">Requests</router-link>
+        </li>
+        <li class="user" v-if="isAuthenticated">
+          <em class="fas fa-user" /> {{ parsedUser }}
+        </li>
         <li v-else>
           <router-link to="/auth">
             <em class="fas fa-sign-in-alt" /> LogIn | SignUp
@@ -33,7 +31,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapGetters(['email']),
+    ...mapGetters(['email', 'isAuthenticated']),
     parsedUser() {
       const { email } = this;
 
@@ -110,8 +108,9 @@ li {
 }
 
 .user {
-  color: white;
+  color: #e6b8de;
   font-weight: bold;
+  cursor: pointer;
 }
 
 em {
