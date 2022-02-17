@@ -8,10 +8,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import TheHeader from './components/layout/TheHeader.vue';
 
 export default {
   components: { TheHeader },
+  methods: {
+    ...mapActions(['autoLogin']),
+  },
+  created() {
+    this.autoLogin();
+  },
 };
 </script>
 

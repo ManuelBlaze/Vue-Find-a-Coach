@@ -11,6 +11,8 @@ const AUTH_LINKS = new Map([
   ['signup', VUE_APP_SIGNUP],
 ]);
 
+let timer;
+
 export default {
   async auth(context, { email, password, type }) {
     await axios
@@ -22,19 +24,63 @@ export default {
       .then(({ data }) => {
         const { idToken, expiresIn, localId } = data;
 
-        context.commit('setUser', {
+        const tokenExpiration = new Date().getTime() + expiresIn * 1000;
+
+        timer = setTimeout(() => {
+          context.dispatch('logout');
+        }, expiresIn * 1000);
+
+        const payload = {
           email,
           token: idToken,
           userId: localId,
-          tokenExpiration: expiresIn,
-        });
+          tokenExpiration,
+        };
+
+        localStorage.setItem('token', idToken);
+        localStorage.setItem('email', email);
+        localStorage.setItem('userId', localId);
+        localStorage.setItem('tokenExpiration', tokenExpiration);
+
+        context.commit('setUser', payload);
       })
       .catch((e) => {
         console.log(e);
         throw new Error(e.message || 'Failed to Auth!');
       });
   },
+  autoLogin(context) {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    const userId = localStorage.getItem('userId');
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+
+    const expiresIn = Number(tokenExpiration) - new Date().getTime();
+
+    if (expiresIn < 0) {
+      return;
+    }
+
+    timer = setTimeout(() => {
+      context.dispatch('logout');
+    }, expiresIn);
+
+    if (token && email && userId) {
+      context.commit('setUser', {
+        token,
+        userId,
+        email,
+        tokenExpiration,
+      });
+    }
+  },
   logout(context) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('tokenExpiration');
+
+    clearTimeout(timer);
     context.commit('logoutUser');
   },
 };
